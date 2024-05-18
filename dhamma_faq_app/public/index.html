@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fine-tuned GPT Web App</title>
+</head>
+<body>
+  <h1>Fine-tuned GPT Web App</h1>
+  <form id="generate-form">
+    <label for="prompt">Enter your prompt:</label>
+    <input type="text" id="prompt" name="prompt" required>
+    <button type="submit">Generate</button>
+  </form>
+  <h2>Response:</h2>
+  <pre id="response"></pre>
+
+  <script>
+    document.getElementById('generate-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const prompt = document.getElementById('prompt').value;
+
+      const responseElement = document.getElementById('response');
+      responseElement.textContent = 'Generating...';
+
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await response.json();
+        responseElement.textContent = data.choices[0].text;
+      } catch (error) {
+        console.error('Error generating text:', error);
+        responseElement.textContent = 'Error generating text';
+      }
+    });
+  </script>
+</body>
+</html>
