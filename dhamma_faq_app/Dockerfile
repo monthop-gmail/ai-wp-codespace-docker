@@ -1,5 +1,5 @@
 # ใช้ node image เป็น base image
-FROM node:16
+FROM node:20
 
 # กำหนด working directory ใน container
 WORKDIR /usr/src/app

@@ -9,8 +9,8 @@ services:
       - ./dhamma_faq_app/.env
     volumes:
       - ./dhamma_faq_app:/usr/src/app
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
 
   nginx:
     build:
@@ -21,9 +21,9 @@ services:
     depends_on:
       - dhamma_faq_app
     volumes:
-      - ./.nginx/nginx/etc:/etc/nginx
-      - ./.nginx/nginx/certbot/etc:/etc/letsencrypt
-      - ./.nginx/nginx/certbot/var:/var/www/certbot
+      - ./.nginx/etc:/etc/nginx
+      - ./.nginx/certbot/etc:/etc/letsencrypt
+      - ./.nginx/certbot/var:/var/www/certbot
     # environment:
     #   - DOMAIN_NAME=${DOMAIN_NAME}
     #   - APP_SERVICE_NAME=${APP_SERVICE_NAME}
@@ -35,9 +35,9 @@ services:
       context: ./nginx_certbot
     volumes:
       - ./nginx_certbot/nginx.conf.template:/etc/nginx/nginx.conf.template
-      - ./.nginx/nginx/etc:/etc/nginx
-      - ./.nginx/nginx/certbot/etc:/etc/letsencrypt
-      - ./.nginx/nginx/certbot/var:/var/www/certbot
+      - ./.nginx/etc:/etc/nginx
+      - ./.nginx/certbot/etc:/etc/letsencrypt
+      - ./.nginx/certbot/var:/var/www/certbot
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
       - APP_SERVICE_NAME=${APP_SERVICE_NAME}
@@ -48,7 +48,7 @@ services:
     build:
       context: ./nginx_openssl
     volumes:
-      - ./.nginx/nginx/ssl:/etc/nginx/ssl
+      - ./.nginx/ssl:/etc/nginx/ssl
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
     entrypoint: "/bin/sh -c '/certssl.sh'"
