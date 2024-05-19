@@ -10,5 +10,8 @@ fine-tune-model:
 web:
 	node server
 
-chatbot-api:
+web-chatbot-api:
 	node server_chatbot
+
+web-chatbot-line:
+	node server_chatbot_line

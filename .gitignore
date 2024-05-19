@@ -1,3 +1,9 @@
+# nginx
+.nginx
+nginx.conf copy.template
+docker-compose copy.yml
+package-lock.json
+
 # Logs
 logs
 *.log

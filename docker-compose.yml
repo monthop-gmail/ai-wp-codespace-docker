@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  dhamma_faq_app:
+    container_name: dhamma_faq_app
+    build:
+      context: ./dhamma_faq_app
+    env_file:
+      - ./dhamma_faq_app/.env
+    volumes:
+      - ./dhamma_faq_app:/usr/src/app
+    expose:
+      - "3000"
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - dhamma_faq_app
+    volumes:
+      - ./.nginx/nginx/etc:/etc/nginx
+      - ./.nginx/nginx/certbot/etc:/etc/letsencrypt
+      - ./.nginx/nginx/certbot/var:/var/www/certbot
+    # environment:
+    #   - DOMAIN_NAME=${DOMAIN_NAME}
+    #   - APP_SERVICE_NAME=${APP_SERVICE_NAME}
+    # command: /bin/sh -c "envsubst '\$DOMAIN_NAME \$APP_SERVICE_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+
+
+  nginx_certbot:
+    build:
+      context: ./nginx_certbot
+    volumes:
+      - ./nginx_certbot/nginx.conf.template:/etc/nginx/nginx.conf.template
+      - ./.nginx/nginx/etc:/etc/nginx
+      - ./.nginx/nginx/certbot/etc:/etc/letsencrypt
+      - ./.nginx/nginx/certbot/var:/var/www/certbot
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - APP_SERVICE_NAME=${APP_SERVICE_NAME}
+      - EMAIL=${EMAIL}
+    entrypoint: "/bin/sh -c '/certbot.sh'"
+
+  nginx_openssl:
+    build:
+      context: ./nginx_openssl
+    volumes:
+      - ./.nginx/nginx/ssl:/etc/nginx/ssl
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    entrypoint: "/bin/sh -c '/certssl.sh'"
+
+volumes:
+  certbot-etc:
+  certbot-var:

@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const MODEL_NAME = process.env.MODEL_NAME;
+const MODEL_NAME = process.env.OPENAI_API_MODEL_NAME;
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
